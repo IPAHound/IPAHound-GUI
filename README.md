@@ -1,9 +1,10 @@
-This is a fork of [BloodHound](https://github.com/ly4k/BloodHound) with FreeIPA nodes and edges for [IPAHound]() collector.
-
+This is a fork of [BloodHound](https://github.com/ly4k/BloodHound) with FreeIPA nodes and edges for [IPAHound](https://github.com/IPAHound/IPAHound) collector.
 
 ---
 
 This is a fork of [BloodHound](https://github.com/BloodHoundAD/BloodHound) with PKI nodes and edges for Certipy along with some minor personal improvements.
+
+---
 
 # Getting Started with BloodHound
 
@@ -24,6 +25,7 @@ BloodHound is maintained by the [BloodHound Enterprise](https://bloodhoundenterp
 [BloodHound Enterprise](https://bloodhoundenterprise.io/) is an Attack Path Management solution that continuously maps and quantifies Active Directory Attack Paths. You can remove millions, even billions of Attack Paths within your existing architecture and eliminate the attacker’s easiest, most reliable, and most attractive techniques.
 
 # Downloading BloodHound Binaries
+
 Pre-Compiled BloodHound binaries can be found [here](https://github.com/BloodHoundAD/BloodHound/releases). 
 
 The rolling release will always be updated to the most recent source. Tagged releases are considered "stable" but will likely not have new features or fixes.
