@@ -292,6 +292,9 @@ const AddEdgeModal = () => {
                             <option value='Contains'>Contains</option>
                             <option value='GPLink'>GPLink</option>
                             <option value='CanRDP'>CanRDP</option>
+                            <option value='CanSSH'>CanSSH</option>
+                            <option value='CanSUDO'>CanSUDO</option>
+                            <option value='ReadKerberosKey'>ReadKerberosKey</option>
                             <option value='CanPSRemote'>CanPSRemote</option>
                             <option value='ExecuteDCOM'>ExecuteDCOM</option>
                             <option value='AllowedToDelegate'>
@@ -313,6 +316,8 @@ const AddEdgeModal = () => {
                             <option value='SQLAdmin'>SQLAdmin</option>
                             <option value='HasSIDHistory'>HasSIDHistory</option>
                             <option value='SyncLAPSPassword'>SyncLAPSPassword</option>
+                            <option value='TrustedBy'>TrustedBy</option>
+                            <option value='Enroll'>Enroll</option>
                         </FormControl>
                         {errors.edgeErrors.length > 0 && (
                             <span className={styles.error}>

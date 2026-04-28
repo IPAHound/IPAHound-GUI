@@ -226,6 +226,74 @@ const DatabaseDataDisplay = () => {
 
             <hr></hr>
 
+            <CollapsibleSection header='IPA OBJECTS'>
+                <Table hover striped responsive>
+                    <thead></thead>
+                    <tbody>
+                    <DatabaseDataLabel
+                        query={
+                            "MATCH (n:IPAUser) RETURN count(n) AS count"
+                        }
+                        index={index}
+                        label={'Users'}
+                    />
+                    <DatabaseDataLabel
+                        query={'MATCH (n:IPAGroup) RETURN count(n) AS count'}
+                        index={index}
+                        label={'Groups'}
+                    />
+                    <DatabaseDataLabel
+                        query={
+                            'MATCH (n:IPAComputer) RETURN count(n) AS count'
+                        }
+                        index={index}
+                        label={'Computers'}
+                    />
+                    <DatabaseDataLabel
+                        query={'MATCH (n:IPAService) RETURN count(n) AS count'}
+                        index={index}
+                        label={'Services'}
+                    />
+                    <DatabaseDataLabel
+                        query={
+                            'MATCH (n:IPACertificateTemplate) RETURN count(n) AS count'
+                        }
+                        index={index}
+                        label={'Certificate Templates'}
+                    />
+                    <DatabaseDataLabel
+                        query={
+                            'MATCH (n:IPACA) RETURN count(n) AS count'
+                        }
+                        index={index}
+                        label={'Certificate Authorities'}
+                    />
+                    <DatabaseDataLabel
+                        query={'MATCH (n:IPAPermission) RETURN count(n) AS count'}
+                        index={index}
+                        label={'Permissions'}
+                    />
+                    <DatabaseDataLabel
+                        query={'MATCH (n:IPARole) RETURN count(n) AS count'}
+                        index={index}
+                        label={'Roles'}
+                    />
+                    <DatabaseDataLabel
+                        query={'MATCH (n:IPASeLinux) RETURN count(n) AS count'}
+                        index={index}
+                        label={'SeLinux'}
+                    />
+                    <DatabaseDataLabel
+                        query={'MATCH (n:IPADomain) RETURN count(n) AS count'}
+                        index={index}
+                        label={'Domains'}
+                    />
+                    </tbody>
+                </Table>
+            </CollapsibleSection>
+
+            <hr></hr>
+
             <div className={clsx('text-center', styles.buttongroup)}>
                 <div role='group' className={styles.buttongroup}>
                     <button

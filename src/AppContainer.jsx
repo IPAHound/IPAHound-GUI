@@ -84,7 +84,11 @@ const fullEdgeList = [
     'AutoEnroll',
     'ManageCa',
     'ManageCertificates',
-    'EnabledBy'
+    'EnabledBy',
+    'CanRDP',
+    'CanSUDO',
+    'ReadKerberosKey',
+    'AddRBCD'
 ];
 
 export default class AppContainer extends Component {

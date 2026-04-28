@@ -11,7 +11,7 @@ import path from 'path';
 import { parser } from 'stream-json';
 import AdmZip from 'adm-zip';
 import * as NewIngestion from '../../js/newingestion';
-import { AzureLabels } from '../../js/newingestion';
+import {AzureLabels, convertIPAData} from '../../js/newingestion';
 import UploadStatusContainer from '../Float/UploadStatusContainer';
 import { streamArray } from 'stream-json/streamers/StreamArray';
 
@@ -40,6 +40,7 @@ const IngestFuncMap = {
     templates: NewIngestion.buildTemplateJsonNew,
     cas: NewIngestion.buildCaJsonNew,
     azure: NewIngestion.convertAzureData,
+    freeipa: NewIngestion.convertIPAData
 };
 
 const MenuContainer = () => {
@@ -309,6 +310,19 @@ const MenuContainer = () => {
                             await uploadData(statement, chunk);
                         }
                     }
+                } else if (file.type === 'freeipa') {
+                    for (let value of Object.values(
+                        processedData.IPANodeMaps
+                    )) {
+                        let props = value.Props;
+                        if (props.length === 0) continue;
+                        let chunked = props.chunk();
+                        let statement = value.Statement;
+
+                        for (let chunk of chunked) {
+                            await uploadData(statement, chunk);
+                        }
+                    }
                 } else {
                     for (let key in processedData) {
                         let props = processedData[key].props;
@@ -424,6 +438,7 @@ const MenuContainer = () => {
                     console.time('PostProcess');
                     await postProcessAD().catch(console.error);
                     await postProcessAzure().catch(console.error);
+                    await postProcessIPA().catch(console.error);
                     console.timeEnd('PostProcess');
                     console.log('Post-processing complete');
                     setPostProcessRunning(false);
@@ -956,6 +971,23 @@ const MenuContainer = () => {
         },
     ];
 
+    const IPAPostProcessSteps = [
+        {
+            step: 'baseOwned',
+            type: 'query',
+            statement:
+                'MATCH (n) WHERE n:IPAUser or n:IPAComputer AND NOT EXISTS(n.owned) CALL {WITH n SET n.owned = false} IN TRANSACTIONS OF 500 ROWS',
+            params: null,
+        },
+        {
+            step: 'baseHighValue',
+            type: 'query',
+            statement:
+                'MATCH (n:IPABase) WHERE NOT EXISTS(n.highvalue) CALL { WITH n SET n.highvalue = false} IN TRANSACTIONS OF 500 ROWS',
+            params: null,
+        }
+    ];
+
     const executePostProcessSteps = async (steps, session) => {
         for (let step of steps) {
             if (step.type === 'query') {
@@ -995,6 +1027,15 @@ const MenuContainer = () => {
         let session = driver.session();
 
         await executePostProcessSteps(AzurePostProcessSteps, session);
+
+        await session.close();
+    };
+
+    const postProcessIPA = async () => {
+        console.log('Running ipa post-processing queries');
+        let session = driver.session();
+
+        await executePostProcessSteps(IPAPostProcessSteps, session);
 
         await session.close();
     };
@@ -1134,6 +1175,7 @@ const MenuContainer = () => {
                 postProcessVisible={postProcessVisible}
                 adPostProcessCount={ADPostProcessSteps.length}
                 azPostProcessCount={AzurePostProcessSteps.length}
+                ipaPostProcessCount={IPAPostProcessSteps.length}
             />
         </div>
     );

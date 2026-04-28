@@ -160,6 +160,39 @@
  */
 
 /**
+ * @typedef {Object} IPABase
+ * @property {number} id
+ * @property {string} type
+ */
+
+/**
+ * @typedef {Object} IPANode
+ * @property {number} id
+ * @property {string} type
+ * @property {Array.<string>} labels
+ * @property {Object} properties
+ */
+
+/**
+ * @typedef {Object} IPARelationship
+ * @property {number} id
+ * @property {string} type
+ * @property {string} label
+ * @property {Object} properties
+ * @property {Object} start
+ * @property {Object} end
+ */
+
+/**
+ * @typedef {Object} IPATrust
+ * @property {number} id
+ * @property {string} type
+ * @property {string} label
+ * @property {Object} start
+ * @property {Object} end
+ */
+
+/**
  * @typedef {Object} AzureDirectoryObject
  * @property {string} id
  * @property {string} @odata.type
@@ -666,4 +699,10 @@
  * @property {string} TargetLabel
  * @property {string} EdgeLabel
  * @property {string} EdgeProps
+ */
+
+/**
+ * @typedef {Object} IPAIngestionData
+ * @property {Object.<string, NodePropWrapper>} IPANodeMaps
+ * @property {Object.<string, NodePropWrapper>} IPARelationshipMaps
  */

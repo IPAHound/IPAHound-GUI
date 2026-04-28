@@ -59,6 +59,10 @@ import AddKeyCredentialLink from './HelpTexts/AddKeyCredentialLink/AddKeyCredent
 import DCSync from './HelpTexts/DCSync/DCSync';
 import SyncLAPSPassword from './HelpTexts/SyncLAPSPassword/SyncLAPSPassword';
 import WriteAccountRestrictions from './HelpTexts/WriteAccountRestrictions/WriteAccountRestrictions';
+import CanSSH from './HelpTexts/CanSSH/CanSSH';
+import CanSUDO from './HelpTexts/CanSUDO/CanSUDO';
+import ReadKerberosKey from './HelpTexts/ReadKerberosKey/ReadKerberosKey';
+import AddRBCD from './HelpTexts/AddRBCD/AddRBCD'
 
 const HelpModal = () => {
     const [sourceName, setSourceName] = useState('');
@@ -153,6 +157,10 @@ const HelpModal = () => {
         DCSync: DCSync,
         SyncLAPSPassword: SyncLAPSPassword,
         WriteAccountRestrictions: WriteAccountRestrictions,
+        CanSSH: CanSSH,
+        CanSUDO: CanSUDO,
+        ReadKerberosKey: ReadKerberosKey,
+        AddRBCD: AddRBCD,
     };
 
     const Component = edge in components ? components[edge] : Default;

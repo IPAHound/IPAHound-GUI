@@ -8,6 +8,17 @@ const PROP_QUERY =
     'UNWIND $props AS prop MERGE (n:Base {objectid:prop.objectid}) SET n:{} SET n += prop.map';
 const AZURE_PROP_QUERY =
     'UNWIND $props AS prop MERGE (n:AZBase {objectid:prop.objectid}) SET n:{} SET n += prop.map';
+const IPA_PROP_QUERY =
+    'UNWIND $props AS prop MERGE (n:Base {objectid:prop.objectid}) SET n:{} SET n += prop.map';
+const IPA_PROP_RELATIONSHIP_QUERY =
+    'UNWIND $props AS prop MERGE (n:Base {objectid:prop.start.properties.objectid}) MERGE (m:Base {objectid:prop.end.properties.objectid}) MERGE (n)-[r:{}]->(m) SET r += prop.map';
+const IPA_PROP_TRUST_QUERY =
+    'UNWIND $props AS prop MERGE (n:Base {objectid:prop.start.properties.objectid}) MERGE (m:Base {objectid:prop.end.properties.objectid}) MERGE (n)-[r:{}]->(m) FOREACH (ignore IN CASE WHEN prop.start.type = \'Domain\' THEN [1] ELSE [] END |\n' +
+    '    SET n:Domain\n' +
+    ')\n' +
+    'FOREACH (ignore IN CASE WHEN prop.start.type = \'IPADomain\' THEN [1] ELSE [] END |\n' +
+    '    SET n:IPADomain\n' +
+    ')';
 const NON_ACL_PROPS = '{isacl:false}';
 
 const GROUP_OBJECT_TYPE = 'ObjectType';
@@ -119,6 +130,12 @@ const AzurehoundKindLabels = {
     KindAZVMContributor: 'AZVMContributor',
     KindAZVMOwner: 'AZVMOwner',
     KindAZVMUserAccessAdmin: 'AZVMUserAccessAdmin',
+};
+
+const IPAhoundKindLabels = {
+    KindIPANode: 'node',
+    KindIPARelationship: 'relationship',
+    KindIPATrusted: 'trust_relationship',
 };
 
 const DirectoryObjectEntityTypes = {
@@ -2291,4 +2308,134 @@ function fProps(sourceLabel, targetLabel, edgeLabel, edgeProps = '') {
         EdgeLabel: edgeLabel,
         EdgeProps: '',
     };
+}
+
+/**
+ *
+ * @param {Array.<IPABase>} chunk
+ */
+export function convertIPAData(chunk) {
+    let data = {
+        IPANodeMaps: {},
+        IPARelationshipMaps: {}
+    };
+
+    for (let item of chunk) {
+        switch (item.type) {
+            case IPAhoundKindLabels.KindIPANode:
+                convertIPANode(item, data);
+                break;
+            case IPAhoundKindLabels.KindIPARelationship:
+                convertIPARelationship(item, data);
+                break;
+            case IPAhoundKindLabels.KindIPATrusted:
+                convertIPATrust(item, data);
+                break;
+            case "null":
+                break;
+            default:
+                console.error(`invalid ipa type detected: ${item.type}`);
+                break;
+        }
+    }
+
+    return data;
+}
+
+/**
+ * @param {IPANode} data
+ * @param {IPAIngestionData} ingestionData
+ */
+export function convertIPANode(data, ingestionData) {
+    insertNewIPAProp(
+        ingestionData,
+        data.labels[0],
+        {
+            objectid: data.properties.objectid,
+            id: data.id,
+            map: data.properties,
+        },
+        false,
+        false
+    );
+}
+
+/**
+ * @param {IPARelationship} data
+ * @param {IPAIngestionData} ingestionData
+ */
+export function convertIPARelationship(data, ingestionData) {
+    insertNewIPAProp(
+        ingestionData,
+        data.label,
+        {
+            start: data.start,
+            end: data.end,
+            map: data.properties,
+        },
+        true,
+        false
+    );
+}
+
+/**
+ * @param {IPATrust} data
+ * @param {IPAIngestionData} ingestionData
+ */
+export function convertIPATrust(data, ingestionData) {
+    insertNewIPAProp(
+        ingestionData,
+        data.label,
+        {
+            start: data.start,
+            end: data.end,
+            map: data.properties,
+        },
+        false,
+        true
+    );
+}
+
+/**
+ * Inserts a query into the IPA ingestion table
+ *
+ * @param {IPAIngestionData} Queries
+ * @param {string} Type
+ * @param {NodeProp} QueryProp
+ * @param {boolean} isRelationship
+ * @param {boolean} isTrust
+ *
+ */
+function insertNewIPAProp(Queries, Type, QueryProp, isRelationship, isTrust) {
+    if (isRelationship) {
+        if (Queries.IPANodeMaps[Type]) {
+            Queries.IPANodeMaps[Type].Props.push(QueryProp);
+        } else {
+            Queries.IPANodeMaps[Type] = {};
+            Queries.IPANodeMaps[Type].Statement =
+                IPA_PROP_RELATIONSHIP_QUERY.format(Type);
+            Queries.IPANodeMaps[Type].Props = [];
+            Queries.IPANodeMaps[Type].Props.push(QueryProp);
+        }
+    } else if (isTrust) {
+        if (Queries.IPANodeMaps[Type]) {
+            Queries.IPANodeMaps[Type].Props.push(QueryProp);
+        } else {
+            Queries.IPANodeMaps[Type] = {};
+            Queries.IPANodeMaps[Type].Statement =
+                IPA_PROP_TRUST_QUERY.format(Type);
+            Queries.IPANodeMaps[Type].Props = [];
+            Queries.IPANodeMaps[Type].Props.push(QueryProp);
+        }
+    } else {
+        if (Queries.IPANodeMaps[Type]) {
+            Queries.IPANodeMaps[Type].Props.push(QueryProp);
+        } else {
+            Queries.IPANodeMaps[Type] = {};
+            Queries.IPANodeMaps[Type].Statement =
+                IPA_PROP_QUERY.format(Type);
+            Queries.IPANodeMaps[Type].Props = [];
+            Queries.IPANodeMaps[Type].Props.push(QueryProp);
+        }
+    }
 }

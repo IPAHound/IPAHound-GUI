@@ -20,7 +20,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=(n:Domain)-->(m:Domain) RETURN p",
+                    "query": "MATCH p=(n:Domain|IPADomain)-->(m:Domain|IPADomain) RETURN p",
                     "allowCollapse": true
                 }
             ]
@@ -552,6 +552,228 @@
                 {
                     "final": true,
                     "query": "MATCH p=allShortestPaths((g {owned:true})-[r*1..]->(n:CertificateTemplate)) WHERE g<>n and 'NoSecurityExtension' in n.`Enrollment Flag` and n.`Enabled` = true and NONE(rel in r WHERE type(rel) in ['EnabledBy','Read','ManageCa','ManageCertificates']) return p"
+                }
+            ]
+        },
+        {
+            "name": "Find all IPA Domain",
+            "category": "IPA Domain Information",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:IPADomain) RETURN n"
+                }
+            ]
+        },
+        {
+            "name": "Find all IPA Domain Admins",
+            "category": "IPA Domain Information",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:IPAGroup)<-[:MemberOf*1..]-(m) WHERE n.cn = \"admins\" RETURN p",
+                    "allowCollapse": false
+                }
+            ]
+        },
+        {
+            "name": "Find all IPA Users with Password Auth",
+            "category": "IPA Domain Information",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:IPAUser) WHERE n.PasswordAuthAllow = True RETURN n",
+                    "allowCollapse": false
+                }
+            ]
+        },
+        {
+            "name": "Find all IPA Users with OTP Auth",
+            "category": "IPA Domain Information",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:IPAUser) WHERE n.PasswordAuthAllow = False RETURN n",
+                    "allowCollapse": false
+                }
+            ]
+        },
+        {
+            "name": "Find IPA Principals with DCSync Rights",
+            "category": "IPA Dangerous Privileges",
+            "queryList": [
+                {
+                    "final": false,
+                    "title": "Select a Domain...",
+                    "query": "MATCH (n:IPADomain) RETURN n.name ORDER BY n.name DESC"
+                },
+                {
+                    "final": true,
+                    "query": "MATCH p=()-[:DCSync|AllExtendedRights|GenericAll]->(:IPADomain {name: $result}) RETURN p",
+                    "allowCollapse": true,
+                    "endNode": "{}"
+                }
+            ]
+        },
+        {
+            "name": "Find All Paths from All IPAUsers to High Value Targets",
+            "category": "IPA Dangerous Privileges",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((g:IPAUser)-[*1..]->(n {highvalue:true})) WHERE g<>n return p",
+                    "allowCollapse": false
+                }
+            ]
+        },
+        {
+            "name": "Find Workstations where IPA Users can SSH",
+            "category": "IPA Dangerous Privileges",
+            "queryList": [
+                {
+                    "final": false,
+                    "title": "Select a IPAUsers Group...",
+                    "query": "MATCH (n:IPAGroup) WHERE n.cn = \"ipausers\" RETURN n.name ORDER BY n.name DESC"
+                },
+                {
+                    "final": true,
+                    "query": "match p=(g:IPAGroup {name:$result})-[:Memberof*0..]->()-[:CanSSH]->()<-[:Memberof*0..]-(c:IPAComputer) return p",
+                    "allowCollapse": true
+                }
+            ]
+        },
+        {
+            "name": "Find Dangerous Privileges for IPA Domain Users Groups",
+            "category": "IPA Dangerous Privileges",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(m:IPAGroup)-[*1..]->(n:IPAComputer) WHERE m.cn = \"ipausers\" RETURN p",
+                    "allowCollapse": true
+                }
+            ]
+        },
+        {
+            "name": "Find Unconstrained Delegation Systems",
+            "category": "IPA Dangerous Privileges",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m:IPAComputer {unconstraineddelegation: true}) RETURN m",
+                    "allowCollapse": true
+                }
+            ]
+        },
+        {
+            "name": "Shortest Paths to Unconstrained Delegation Systems",
+            "category": "IPA Shortest Paths",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n) MATCH p=shortestPath((n)-[:{}*1..]->(m:IPAComputer {unconstraineddelegation: true})) WHERE NOT n=m RETURN p"
+                }
+            ]
+        },
+        {
+            "name": "Shortest Path from Owned IPA Principals",
+            "category": "IPA Shortest Paths",
+            "queryList": [
+                {
+                    "final": false,
+                    "title": "Select a domain...",
+                    "query": "MATCH (n:IPADomain) RETURN n.name ORDER BY n.name DESC"
+                },
+                {
+                    "final": false,
+                    "title": "Select a user",
+                    "query": "MATCH (n) WHERE n.domain=$result AND n.owned=true RETURN n.name, n.PwdLastSet ORDER BY n.PwdLastSet ASC"
+                },
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((a {name:$result})-[:{}*1..]->(b:IPAComputer)) WHERE NOT a=b RETURN p",
+                    "startNode": "{}",
+                    "allowCollapse": true
+                }
+            ]
+        },
+        {
+            "name": "Shortest Paths to IPA Domain Admins from Owned IPA Principals",
+            "category": "IPA Shortest Paths",
+            "queryList": [
+                {
+                    "final": false,
+                    "title": "Select a Domain Admin group...",
+                    "query": "MATCH (n:IPAGroup) WHERE n.cn = \"admins\" RETURN n.name ORDER BY n.name DESC"
+                },
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((n {owned:true})-[:{}*1..]->(m:IPAGroup {name:$result})) WHERE NOT n=m RETURN p",
+                    "allowCollapse": true,
+                    "endNode": "{}"
+                }
+            ]
+        },
+        {
+            "name": "Shortest Paths to IPA High Value Targets",
+            "category": "IPA Shortest Paths",
+            "queryList": [
+                {
+                    "final": false,
+                    "title": "Select a Domain",
+                    "query": "MATCH (n:IPADomain) RETURN n.name ORDER BY n.name DESC"
+                },
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((n)-[*1..]->(m {highvalue:true})) WHERE m.domain=$result AND m<>n RETURN p",
+                    "allowCollapse": true,
+                    "endNode": "{}"
+                }
+            ]
+        },
+        {
+            "name": "Find Shortest Paths to IPA Domain Admins",
+            "category": "IPA Shortest Paths",
+            "queryList": [
+                {
+                    "final": false,
+                    "title": "Select a Domain Admin group...",
+                    "query": "MATCH (n:IPAGroup) WHERE n.cn = \"admins\" RETURN n.name ORDER BY n.name DESC"
+                },
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((n)-[:{}*1..]->(m:IPAGroup {name:$result})) WHERE NOT n=m RETURN p",
+                    "allowCollapse": true,
+                    "endNode": "{}"
+                }
+            ]
+        },
+        {
+            "name": "Find all IPA Certificate Templates",
+            "category": "IPA PKI",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:IPACertificateTemplate) RETURN n"
+                }
+            ]
+        },
+        {
+            "name": "Find enabled IPA Certificate Templates",
+            "category": "IPA PKI",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:IPACertificateTemplate) WHERE n.Enabled = true RETURN n"
+                }
+            ]
+        },
+        {
+            "name": "Find IPA Certificate Authorities",
+            "category": "IPA PKI",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:IPACA) RETURN n"
                 }
             ]
         }

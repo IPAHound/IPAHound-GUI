@@ -29,6 +29,18 @@ import BaseNodeData from "./Tabs/BaseNodeData";
 import ContainerNodeData from "./Tabs/ContainerNodeData";
 import AZManagementGroupNodeData from "./Tabs/AZManagementGroupNodeData";
 import AZRoleNodeData from "./Tabs/AZRoleNodeData";
+import IPADomainNodeData from "./Tabs/IPADomainNodeData";
+import IPAUserNodeData from "./Tabs/IPAUserNodeData";
+import IPAComputerNodeData from "./Tabs/IPAComputerNodeData";
+import IPAGroupNodeData from "./Tabs/IPAGroupNodeData";
+import IPAServiceNodeData from "./Tabs/IPAServiceNodeData";
+import IPACANodeData from "./Tabs/IPACANodeData";
+import IPATemplateNodeData from "./Tabs/IPATemplateNodeData";
+import IPAPermissionNodeData from "./Tabs/IPAPermissionNodeData";
+import IPACanSUDOEdgeData from "./Tabs/IPACanSUDOEdgeData";
+import IPARoleNodeData from "./Tabs/IPARoleNodeData";
+import IPASELinuxNodeData from "./Tabs/IPASELinuxNodeData";
+
 
 class TabContainer extends Component {
 
@@ -58,6 +70,17 @@ class TabContainer extends Component {
             azAppVisible: false,
             azManagementGroupVisible: false,
             azRoleVisible: false,
+            ipapermissionVisible: false,
+            iparoleVisible: false,
+            ipaselinuxVisible: false,
+            ipadomainVisible: false,
+            ipauserVisible: false,
+            ipagroupVisible: false,
+            ipaserviceVisible: false,
+            ipacomputerVisible: false,
+            ipacaVisible: false,
+            ipatemplateVisible: false,
+            ipacansudoVisible: false,
             selected: 1,
         };
     }
@@ -112,11 +135,44 @@ class TabContainer extends Component {
         } else if (type === 'Base') {
             this._baseNodeClicked();
         } else if (type === 'Container') {
-            this._containerNodeClicked()
+            this._containerNodeClicked();
         } else if (type === 'AZManagementGroup') {
-            this._azManagementGroupNodeClicked()
+            this._azManagementGroupNodeClicked();
         } else if (type === 'AZRole') {
-            this._azRoleNodeClicked()
+            this._azRoleNodeClicked();
+        }
+        else if (type === 'IPADomain') {
+            this._ipadomainNodeClicked();
+        }
+        else if (type === 'IPAUser') {
+            this._ipauserNodeClicked();
+        }
+        else if (type === 'IPAComputer') {
+            this._ipacomputerNodeClicked();
+        }
+        else if (type === 'IPAGroup') {
+            this._ipagroupNodeClicked();
+        }
+        else if (type === 'IPAPermission') {
+            this._ipaPermissionNodeClicked();
+        }
+        else if (type === 'IPAService') {
+            this._ipaServiceClicked();
+        }
+        else if (type === 'IPACA') {
+            this._ipacaNodeClicked();
+        }
+        else if (type === 'IPACertificateTemplate') {
+            this._ipatemplateNodeClicked();
+        }
+        else if (type === 'IPARole') {
+            this._ipaRoleNodeClicked();
+        }
+        else if (type === 'IPASeLinux') {
+            this._ipaSeLinuxNodeClicked();
+        }
+        else if (type === 'CanSUDO') {
+            this._cansudoEdgeClicked();
         }
     }
 
@@ -318,6 +374,94 @@ class TabContainer extends Component {
         });
     }
 
+    _ipauserNodeClicked() {
+        this.clearVisible()
+        this.setState({
+            ipauserVisible: true,
+            selected: 2
+        });
+    }
+
+    _ipagroupNodeClicked() {
+        this.clearVisible()
+        this.setState({
+            ipagroupVisible: true,
+            selected: 2
+        });
+    }
+
+    _ipacomputerNodeClicked() {
+        this.clearVisible()
+        this.setState({
+            ipacomputerVisible: true,
+            selected: 2
+        });
+    }
+
+    _ipadomainNodeClicked() {
+        this.clearVisible()
+        this.setState({
+            ipadomainVisible: true,
+            selected: 2
+        });
+    }
+
+    _ipaServiceClicked() {
+        this.clearVisible()
+        this.setState({
+            ipaserviceVisible: true,
+            selected: 2
+        });
+    }
+
+    _ipacaNodeClicked() {
+        this.clearVisible()
+        this.setState({
+            ipacaVisible: true,
+            selected: 2
+        });
+    }
+
+    _ipatemplateNodeClicked() {
+        this.clearVisible()
+        this.setState({
+            ipatemplateVisible: true,
+            selected: 2
+        });
+    }
+
+    _ipaPermissionNodeClicked() {
+        this.clearVisible()
+        this.setState({
+            ipapermissionVisible: true,
+            selected: 2
+        });
+    }
+
+    _ipaRoleNodeClicked() {
+        this.clearVisible()
+        this.setState({
+            iparoleVisible: true,
+            selected: 2
+        });
+    }
+
+    _ipaSeLinuxNodeClicked() {
+        this.clearVisible()
+        this.setState({
+            ipaselinuxVisible: true,
+            selected: 2
+        });
+    }
+
+    _cansudoEdgeClicked() {
+        this.clearVisible()
+        this.setState({
+            ipacansudoVisible: true,
+            selected: 2
+        });
+    }
+
     _handleSelect(index, last) {
         this.setState({ selected: index });
     }
@@ -360,7 +504,18 @@ class TabContainer extends Component {
                                 !this.state.azAppVisible &&
                                 !this.state.baseVisible &&
                                 !this.state.azManagementGroupVisible &&
-                                !this.state.azRoleVisible
+                                !this.state.azRoleVisible &&
+                                !this.state.ipapermissionVisible &&
+                                !this.state.iparoleVisible &&
+                                !this.state.ipaselinuxVisible &&
+                                !this.state.ipadomainVisible &&
+                                !this.state.ipauserVisible &&
+                                !this.state.ipagroupVisible &&
+                                !this.state.ipaserviceVisible &&
+                                !this.state.ipacomputerVisible &&
+                                !this.state.ipacaVisible &&
+                                !this.state.ipatemplateVisible &&
+                                !this.state.ipacansudoVisible
                             }
                         />
                         <BaseNodeData visible={this.state.baseVisible} />
@@ -399,6 +554,17 @@ class TabContainer extends Component {
                         <AZAppNodeData visible={this.state.azAppVisible} />
                         <AZManagementGroupNodeData visible={this.state.azManagementGroupVisible} />
                         <AZRoleNodeData visible={this.state.azRoleVisible} />
+                        <IPAPermissionNodeData visible={this.state.ipapermissionVisible} />
+                        <IPARoleNodeData visible={this.state.iparoleVisible} />
+                        <IPASELinuxNodeData visible={this.state.ipaselinuxVisible} />
+                        <IPADomainNodeData visible={this.state.ipadomainVisible} />
+                        <IPAUserNodeData visible={this.state.ipauserVisible} />
+                        <IPAComputerNodeData visible={this.state.ipacomputerVisible} />
+                        <IPAGroupNodeData visible={this.state.ipagroupVisible} />
+                        <IPAServiceNodeData visible={this.state.ipaserviceVisible} />
+                        <IPACANodeData visible={this.state.ipacaVisible} />
+                        <IPATemplateNodeData visible={this.state.ipatemplateVisible} />
+                        <IPACanSUDOEdgeData visible={this.state.ipacansudoVisible} />
                     </Tab>
 
                     <Tab eventKey={3} title='Analysis'>

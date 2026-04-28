@@ -10,12 +10,13 @@ const PostProcessDisplay = ({
     visible,
     adPostProcessCount,
     azPostProcessCount,
+    ipaPostProcessCount
 }) => {
     const [progress, setProgress] = useState(0);
 
     const context = useContext(AppContext);
 
-    const totalQueries = adPostProcessCount + azPostProcessCount;
+    const totalQueries = adPostProcessCount + azPostProcessCount + ipaPostProcessCount;
 
     const getStatusText = () => {
         if (step === 0) return 'Awaiting Post Processing';

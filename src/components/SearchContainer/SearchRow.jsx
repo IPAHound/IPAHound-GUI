@@ -88,6 +88,36 @@ const SearchRow = ({ item, search }) => {
         case 'AZRole':
             icon.className = 'fa fa-window-restore'
             break
+        case 'IPADomain':
+            icon.className = 'fa fa-globe';
+            break
+        case 'IPAPermission':
+            icon.className = 'fa fa-lock';
+            break
+        case 'IPAUser':
+            icon.className = 'fa fa-user';
+            break
+        case 'IPAGroup':
+            icon.className = 'fa fa-users';
+            break
+        case 'IPAComputer':
+            icon.className = 'fa fa-desktop';
+            break
+        case 'IPAService':
+            icon.className = 'fa fa-robot';
+            break
+        case 'IPACA':
+            icon.className = 'fa fa fa-university';
+            break
+        case 'IPACertificateTemplate':
+            icon.className = 'fa fa-id-card';
+            break
+        case 'IPARole':
+            icon.className = 'fa fa-user-gear';
+            break
+        case 'IPASeLinux':
+            icon.className = 'fa fa-shield-halved';
+            break
         default:
             icon.className = 'fa fa-question';
             type = 'Base';

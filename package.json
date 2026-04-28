@@ -1,7 +1,7 @@
 {
     "name": "bloodhound",
-    "version": "4.2.0-ly4k",
-    "description": "Graph Theory for Active Directory",
+    "version": "4.2.0-ly4k-im10n",
+    "description": "Graph Theory for Active Directory and FreeIPA",
     "prettier": {
         "tabWidth": 4,
         "trailingComma": "es5",
@@ -13,7 +13,8 @@
         "Graph",
         "Active Directory",
         "Azure",
-        "Security"
+        "Security",
+        "FreeIPA"
     ],
     "homepage": "https://github.com/BloodHoundAD/Bloodhound",
     "repository": {

@@ -157,7 +157,7 @@ class GraphContainer extends Component {
         this.toggleDarkMode(appStore.performance.darkMode);
         this.doQueryNative({
             statement:
-                'MATCH (n:Group) WHERE n.objectid =~ "(?i)S-1-5.*-512" WITH n MATCH (n)<-[r:MemberOf*1..]-(m) RETURN n,r,m',
+                'MATCH (n) WHERE n.objectid =~ "(?i)S-1-5.*-512" WITH n MATCH (n)<-[r:MemberOf*1..]-(m) RETURN n,r,m',
             //statement: 'MATCH (n)-[r:AdminTo]->(m) RETURN n,r,m LIMIT 5',
             //statement: 'MATCH p=(n:Domain)-[r]-(m:Domain) RETURN p',
             //statement: 'MATCH p=(n)-[r]->(m) RETURN p',
@@ -1115,12 +1115,25 @@ class GraphContainer extends Component {
 
     _nodeClicked(n) {
         if (!this.state.dragged) {
+            let data_type;
+            let data_objectid;
+            let data_blocksinheritance = 0;
+            let data_props_domain = 0;
+            if (n.data.node !== undefined) {
+                data_type = n.data.node.type;
+                data_objectid = n.data.node.objectid;
+                data_blocksinheritance = n.data.node.blocksinheritance;
+                data_props_domain = n.data.node.props.domain;
+            } else {
+                data_type = n.data.edge.label;
+                data_objectid = n.data.edge.id;
+            }
             emitter.emit(
                 'nodeClicked',
-                n.data.node.type,
-                n.data.node.objectid,
-                n.data.node.blocksinheritance,
-                n.data.node.props.domain
+                data_type,
+                data_objectid,
+                data_blocksinheritance,
+                data_props_domain
             );
         } else {
             this.setState({ dragged: false });
@@ -1399,6 +1412,7 @@ class GraphContainer extends Component {
         });
 
         sigmaInstance.bind('clickNode', this._nodeClicked.bind(this));
+        sigmaInstance.bind('clickEdge', this._nodeClicked.bind(this));
 
         sigmaInstance.bind(
             'hovers',

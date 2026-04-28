@@ -35,6 +35,33 @@ export default class SpotlightRow extends Component {
             case 'GPO':
                 nodeIcon = 'fa fa-list';
                 break;
+            case 'IPAPermission':
+                nodeIcon = 'fa fa-lock';
+                break;
+            case 'IPAUser':
+                nodeIcon = 'fa fa-user';
+                break;
+            case 'IPAGroup':
+                nodeIcon = 'fa fa-users';
+                break;
+            case 'IPAComputer':
+                nodeIcon = 'fa fa-desktop';
+                break;
+            case 'IPAService':
+                nodeIcon = 'fa fa-robot';
+                break;
+            case 'IPACA':
+                nodeIcon = 'fa fa fa-university';
+                break;
+            case 'IPACertificateTemplate':
+                nodeIcon = 'fa fa-id-card';
+                break;
+            case 'IPARole':
+                nodeIcon = 'fa fa-user-gear';
+                break;
+            case 'IPASeLinux':
+                nodeIcon = 'fa fa-shield-halved';
+                break
             default:
                 nodeIcon = '';
                 break;
@@ -61,6 +88,33 @@ export default class SpotlightRow extends Component {
                 break
             case 'GPO':
                 nodeIcon = 'fa fa-list';
+                break;
+            case 'IPAPermission':
+                nodeIcon = 'fa fa-lock';
+                break
+            case 'IPADomain':
+                nodeIcon = 'fa fa-globe';
+                break
+            case 'IPAUser':
+                nodeIcon = 'fa fa-user';
+                break
+            case 'IPAGroup':
+                nodeIcon = 'fa fa-users';
+                break;
+            case 'IPAComputer':
+                nodeIcon = 'fa fa-desktop';
+                break;
+            case 'IPAService':
+                nodeIcon = 'fa fa-robot';
+                break;
+            case 'IPACA':
+                nodeIcon = 'fa fa fa-university';
+                break;
+            case 'IPACertificateTemplate':
+                nodeIcon = 'fa fa-id-card';
+                break;
+            case 'IPARole':
+                nodeIcon = 'fa fa-user-gear';
                 break;
             default:
                 parentIcon = '';

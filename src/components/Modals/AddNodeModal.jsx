@@ -52,7 +52,7 @@ const AddNodeModal = () => {
                 );
                 return;
             }
-        } else {
+        } else if (type !== 'IPADomain' && type !== 'Domain') {
             if (!name.includes('@') || name.split('@').length > 2) {
                 setError('Name must be similar to NAME@DOMAIN.COM');
                 return;
@@ -116,6 +116,14 @@ const AddNodeModal = () => {
                                 <option value='Domain'>Domain</option>
                                 <option value='OU'>OU</option>
                                 <option value='GPO'>GPO</option>
+                                <option value='IPAUser'>IPAUser</option>
+                                <option value='IPAGroup'>IPAGroup</option>
+                                <option value='IPADomain'>IPADomain</option>
+                                <option value='IPAComputer'>IPAComputer</option>
+                                <option value='IPARole'>IPARole</option>
+                                <option value='IPAPermission'>IPAPermission</option>
+                                <option value='IPAService'>IPAService</option>
+                                <option value='IPACertificateTemplate'>IPACertificateTemplate</option>
                             </FormControl>
                         </FormGroup>
                     </form>

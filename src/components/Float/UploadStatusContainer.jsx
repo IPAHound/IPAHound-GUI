@@ -18,6 +18,7 @@ const UploadStatusContainer = ({
     postProcessVisible,
     adPostProcessCount,
     azPostProcessCount,
+    ipaPostProcessCount,
 }) => {
     const dragControl = useDragControls();
 
@@ -68,6 +69,7 @@ const UploadStatusContainer = ({
                             visible={postProcessVisible}
                             adPostProcessCount={adPostProcessCount}
                             azPostProcessCount={azPostProcessCount}
+                            ipaPostProcessCount={ipaPostProcessCount}
                         />
                     </div>
                 </AnimatePresence>

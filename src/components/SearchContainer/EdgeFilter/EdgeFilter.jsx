@@ -190,6 +190,20 @@ const EdgeFilter = ({ open }) => {
                     <EdgeFilterCheck name='AZManagedIdentity' />
                     <EdgeFilterCheck name='AZKeyVaultContributor' />
                 </div>
+                <div>
+                    <EdgeFilterSection
+                        title='IPA Edges'
+                        edges={[
+                            'CanSSH',
+                            'CanSUDO',
+                            'ReadKerberosKey',
+                        ]}
+                        sectionName='ipa'
+                    />
+                    <EdgeFilterCheck name='CanSSH' />
+                    <EdgeFilterCheck name='CanSUDO' />
+                    <EdgeFilterCheck name='ReadKerberosKey' />
+                </div>
             </div>
         </motion.div>
     );
