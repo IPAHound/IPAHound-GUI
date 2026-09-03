@@ -13,7 +13,7 @@ const IPA_PROP_QUERY =
 const IPA_PROP_RELATIONSHIP_QUERY =
     'UNWIND $props AS prop MERGE (n:Base {objectid:prop.start.properties.objectid}) MERGE (m:Base {objectid:prop.end.properties.objectid}) MERGE (n)-[r:{}]->(m) SET r += prop.map';
 const IPA_PROP_TRUST_QUERY =
-    'UNWIND $props AS prop MERGE (n:Base {objectid:prop.start.properties.objectid}) MERGE (m:Base {objectid:prop.end.properties.objectid}) MERGE (n)-[r:{}]->(m) FOREACH (ignore IN CASE WHEN prop.start.type = \'Domain\' THEN [1] ELSE [] END |\n' +
+    'UNWIND $props AS prop MERGE (n:Base {objectid:prop.start.objectid}) MERGE (m:Base {objectid:prop.end.objectid}) MERGE (n)-[r:{}]->(m) FOREACH (ignore IN CASE WHEN prop.start.type = \'Domain\' THEN [1] ELSE [] END |\n' +
     '    SET n:Domain\n' +
     ')\n' +
     'FOREACH (ignore IN CASE WHEN prop.start.type = \'IPADomain\' THEN [1] ELSE [] END |\n' +
