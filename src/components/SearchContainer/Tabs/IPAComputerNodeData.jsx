@@ -141,7 +141,9 @@ const IPAComputerNodeData = () => {
                                 property='Unrolled SSH Rights'
                                 target={objectid}
                                 baseQuery={
-                                    'MATCH p=(n)-[r1:MemberOf|AddMember*0..]->(t1:IPAGroup)-[r2:CanSSH*1..]->(t2:IPAGroup)<-[r3:MemberOf*0..]-(m:IPAComputer {objectid: $objectid}) WHERE NOT n:IPAGroup'
+                                    'MATCH (m:IPAComputer {objectid: $objectid})\n' +
+                                    'MATCH p = (n)-[:MemberOf|AddMember*0..]->()-[:CanSSH*1..]->()<-[:MemberOf*0..]-(m)\n' +
+                                    'RETURN p'
                                 }
                                 end={label}
                                 distinct
