@@ -142,8 +142,7 @@ const IPAComputerNodeData = () => {
                                 target={objectid}
                                 baseQuery={
                                     'MATCH (m:IPAComputer {objectid: $objectid})\n' +
-                                    'MATCH p = (n)-[:MemberOf|AddMember*0..]->()-[:CanSSH*1..]->()<-[:MemberOf*0..]-(m)\n' +
-                                    'RETURN p'
+                                    'MATCH p = (n)-[:MemberOf|AddMember*0..]->()-[:CanSSH*1..]->()<-[:MemberOf*0..]-(m)'
                                 }
                                 end={label}
                                 distinct
